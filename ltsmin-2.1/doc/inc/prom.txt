@@ -1,0 +1,43 @@
+== SpinS
+
+Use SpinS (distributed as submodule LTSmin) to compile PROMELA model
+'leader.pm' to 'leader.pm.spins':
+
+----
+spins -o3 leader.pm
+----
+
+The optional flag +-o3+ turns off control flow optimizations.
+
+On the resulting compiled SpinS module, all SpinS-related LTSmin
+tools can be used:
+
+----
+prom2lts-sym -rgs --order=chain leader.pm.spins leader.etf
+prom2lts-mc --assert -prr --threads=16 leader.pm.spins
+prom2lts-seq --por -d --trace=t.gcf leader.pm.spins
+----
+
+These three examples perform: full symbolic reachability with chaining order
+(+--order+) and reordering (+-rgs+) storing the
+state space in ETF format, doing a randomized (+-prr+) parallel (+--threads+)
+search for assertion violations (+--assert+) in the model, and searching for
+deadlocks (+-d+) storing the first counter example in 't.gcf' (+--trace+).
+
+If a never claim is present in the model, a Buchi automaton is created.
+LTSmin can directly perform LTL model checking on such models:
+
+----
+prom2lts-mc --strategy=cndfs --threads=16 leader-never.pm.spins
+prom2lts-seq --por --proviso=color --strategy=scc leader-never.pm.spins 
+----
+
+These two examples perform LTL model checking using: multi-core NDFS (cndfs),
+and a sequential SCC-based algorithm with partial order reduction (+--por+ and
++--proviso+, where different provisos are available).
+Again one can provide additional options to store traces, etc.
+
+See the man pages of the respective tools for further options.
+
+NOTE: SpinS is an adaptation of the SpinJa model checker, which generates C code
+implementing the PINS interface instead of Java code.

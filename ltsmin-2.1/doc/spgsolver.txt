@@ -1,0 +1,32 @@
+//                           -*- mode: doc; outline-regexp: "==\(=*\) ." -*-
+spgsolver(1)
+===========
+:Author:  Gijs Kant
+:Email:   <kant@cs.utwente.nl>
+:Date:    2012-02-20
+
+== NAME
+
+spgsolver - symbolic parity game solver.
+
+== SYNOPSIS
+
+spgsolver [OPTIONS] <game>
+
+== OPTIONS
+
+include::inc/spg-solve-options.txt[]
+
+include::inc/vset-options.txt[]
+
+include::inc/general-options.txt[]
+
+== EXIT STATUS
+0::
+        Successful termination.
+255::
+        Some error occurred.
+
+== SEE ALSO
+
+manpage:pbes2lts-sym[1]

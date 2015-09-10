@@ -1,0 +1,119 @@
+//                           -*- mode: doc; outline-regexp: "==\(=*\) ." -*-
+gcf(1)
+======
+:Author:  Stefan Blom
+:Email:   <sccblom@ewi.utwente.nl>
+:Date:    2011-06-02
+
+
+== NAME
+gcf - Build and extract GCF archives.
+
+== SYNOPSIS
+
+gcf --create <gcf> [input1 [input2 [...]]]
+
+gcf --extract <gcf> [--output=<dir>] ...
+
+gcf --list <gcf>
+
+gcf --copy <gcf_source> <gcf_target>
+
+gcf --compress (<file>|<dir>)*
+
+gcf --decompress (<file>|<dir>)*
+
+gcf --to-zip <gcf_source> <zip_target>
+
+gcf --from-zip <zip_source> <gcf_target>
+
+== DESCRIPTION
+This tool can build a GCF archive from a given list of files and files within
+given directories. It can extract the files from a GCF archive and write them
+to a directory or to a set of files given by a pattern.
+
+A GCF archive provides interleaved storage of multiple large files within one
+very large file. The GCF file structure was designed with distributed file
+systems and distributed applications in mind. The key points of the structure
+are that a GCF file contains one or more clusters and each of those clusters
+contains 2 or more blocks. One block in each cluster is reserved for meta data.
+
+== OPERATIONS
+
+*--create*::
+Create a GCF archive in a file. This is the default.
+
+*-x*, *--extract*::
+Extract files from GCF archive. By default files are extracted into the working
+directory. This behaviour can be changed with the *--output* option. When no
+additional arguments are given, all fields are extracted. If additional
+arguments are given only files matching one of the arguments are extracted.
+
+*-l*, *--list*::
+List the files contained within the archive.
+
+*--copy*::
+Create a new archive by copying the contents of an existing archive.
+This is useful to change the compression policy for an archive.
+
+*-c*, *--compress*::
+For every argument ++name++ that is a file, the file is compressed according
+to the policy and written as ++name.gzf++.
+For every argument ++name++ that is a directory, the contents are compressed
+into the GCF archive ++name.gcf++.
+
+*-d*, *--decompress*::
+Reverse operation of *--compress*.
+
+*--to-zip*::
+Copy the contents of the GCF archive to a ZIP archive.
+
+*--from-zip*::
+Copy the contents of the ZIP archive to a GCF archive.
+
+== OPTIONS
+
+*-f*, *--force*::
+By default extraction to a directory fails is a file or directory already
+exists. If this flag is used any existing file or directory is removed.
+
+*--block-size*='BYTES'::
+Size of a block in bytes.  Defaults to 32,768.
+
+*--cluster-size*='BLOCKS'::
+Number of blocks in a cluster.  Defaults to 32.
+
+*-z*, *--compression*='<policy>'::
+Set the compression policy used in the archive. The default is to apply gzip
+to every file. On specifying compression policies, see below.
+
+*-o*, *--output*='STRING'::
+Specify the directory into which the *--extract* should write the extracted
+files.
+
+*--zip-code*='<policy>'::
+Set the compression policy used for ZIP archives. The default is no encoding.
+On specifying compression policies, see below.
+
+include::inc/general-options.txt[]
+
+include::inc/compression.txt[]
+
+== EXAMPLE
+
+Given a GCF archive 'generated.gcf' that contains an LTS, we can extract
+a dir as follows:
+----
+gcf -x generated.gcf generated.dir
+----
+
+The inverse (transforming 'generated.dir' to 'generated.gcf') is also possible,
+but it is better to use manpage:ltsmin-convert[1] for this task because the
+best compression is achieved by applying different compressions to different
+files, which cannot be specified with '-z'.
+
+== EXIT STATUS
+0::
+        Successful termination.
+>0::
+        Some error occurred.

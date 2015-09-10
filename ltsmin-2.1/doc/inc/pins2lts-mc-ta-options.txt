@@ -1,0 +1,131 @@
+*--threads*='NUMBER'::
+        Number of threads to use for state space exploration
+        (default: NUMBER=NUM_CORES). Maximum is 64.
+
+
+*--strategy*='TYPE'::
+        Select an exploration strategy.
+        'TYPE' can be one of the following options:
+
+sbfs;;
+  explore state space in strict breadth-first order (default). Gives best result
+  in the timed automata setting.
+  
+bfs;;
+  explore state space in breadth-first order.
+
+dfs;;
+  explore state space in relaxed depth-first order. Relaxed meaning that
+  the inclusion check on the set of visited states is executed immediately
+  after generating a state. This saves stack space and improves performance
+  of the parallel reachability analysis.
+
+*--perm*='TYPE'::
+        Select the transition permutation, which is used to guide
+        different threads to different parts of the state space.
+        A good permutation can significantly speed up bug hunting.
+        'TYPE' can be one of the following options, each has
+        different properties in terms of performance and effectiveness
+        summarized as (perf./eff.) :
+
+dynamic;;
+    use "fresh successor heuristics" described in
+    "Variations on Multi-Core Nested Depth-First Search" (Laarman, van de Pol).
+    (decent/very good for bug hunting). Default for LTL.
+
+sort;;
+    sort on the unique id of the successor state (decent/good)
+
+random;;
+    use multiple fixed random permutation schemes per worker (decent/good).
+
+rr;;
+	randomized using a full random sort order on the states. This is more random
+	than the previous option, but requires more pre-computation time for the
+	random array (decent/almost perfect).
+
+sr;;
+    sort according to one fixed random permutation scheme per worker (decent/decent).
+
+shift;;
+   shift the order of transitions by a fixed value per worker (fast/decent).
+
+shiftall;;
+   as shift, but with a equal load for all workers (a bit slower/decent).
+
+otf;;
+    sort according to a dynamic permutation scheme (slow/perfect).
+
+none;;
+    use the same exploration order for all workers. Default for reachability.
+
+
+*--state*='TYPE'::
+        Select type of data structure for storing visited states.
+        'TYPE' can be one of the following options:
+
+table;;
+  use a lockless hash table.
+
+tree;;
+  use a lockless tree-compressed table. In many cases the tree
+  can compress states to two integers regardless of their length. To efficiently
+  accommodate more than 4*10^9 states, the table is split in a root and a leaf
+  table whose respective size can be adjusted using the --ratio option
+  (default). 
+
+cleary-tree;;
+  use a lockless tree-compressed hash table with a parallel Cleary table to
+  store roots. The compressed size of a state can approach one integer 
+  with this approach. The leafs table is stored as a standard tree table (two
+  integers per subtree), which typically can be much smaller (up to the
+  square root of the root table size). To control the respective size of the
+  leaf table use the --ratio option.
+
+
+*--ratio*='NUMBER'::
+        Log_2 ratio between root and leaf table in tree compression. The ratio
+        can theoretically be as low as the square root of the root table size
+        (see --size). This will however only work if the state vectors are
+        perfectly combinatorial wrt their variable values. In most cases
+        the leaf table will grow larger, but find found that a factor four
+        (--ratio=2) works well for over 75% of the BEEM models.
+        (default: NUMBER=2). 
+
+
+*--size*='NUMBER'::
+        Log_2 hash table size in elements (default: NUMBER=24).
+        This is also used for the internal node table of the tree.
+
+
+*--handoff*='NUMBER'::
+        Maximum number of states to hand off to a thread requesting load
+        (default: NUMBER=100). The operation may be expensive, depending
+        on the size of the states.
+
+
+*--gran*='NUMBER'::
+        Granularity at which control is handed back to the load balancer
+        (default: NUMBER=100). Higher values may reduce runtime
+        overhead, but decrease the performance of the load balancer.
+        The state space explorer uses the number of transitions as work
+        counter.
+
+
+*--noref*::
+        Store full state vectors on queue/stack. This is usually a bit faster,
+        but requires more memory. Incompatible with the swarmed algorithms.
+
+
+*--zobrist*='NUMBER'::
+        Save time by using zobrist incremental state hashing.
+        NUMBER defines the (log_2) size of the random number table
+        (default: 0=OFF). Large tables mean better hash distributions,
+        but more cache misses due to memory size.
+        Experiments have shown that small tables (2^6) suffice for
+        good distributions (equal or better than Jenkin's hash).
+        Improvements are only noticable for fast state generators, like
+        DiVinE 2.2 (manpage:dve22lts-mc[1]).
+
+
+include::reachability-options.txt[]

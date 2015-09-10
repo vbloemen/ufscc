@@ -1,0 +1,31 @@
+//                           -*- mode: doc; outline-regexp: "==\(=*\) ." -*-
+etf2lts-dist(1)
+===============
+:Author:  Jeroen Ketema
+:Email:   <jketema@ewi.utwente.nl>
+:Date:    2012-02-20
+
+== NAME
+
+etf2lts-dist - Distributed state space generator for ETF models.
+
+== SYNOPSIS
+
+*{manname}* [OPTIONS]... 'input.etf' ['output.fmt']
+
+== DESCRIPTION
+
+{manname} generates a labelled transition system from a
+specification provided in 'input.etf'.  Specifications are in
+manpage:etf[5] format.  'output.fmt'
+specifies the name of the output archive.  The desired format is
+deduced from the filename extension. Available formats are described
+below.
+
+include::inc/mpi-example.txt[]
+
+== OPTIONS
+
+include::inc/pins2lts-dist-options.txt[]
+
+include::inc/pins2lts-dist.txt[]

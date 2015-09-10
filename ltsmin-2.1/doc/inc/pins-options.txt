@@ -1,0 +1,79 @@
+=== PINS Options
+
+*--labels*::
+        Print state variable, type and value names, and state and action labels.
+        Then exit.
+        Useful for writing predicate (+--invariant+), LTL (+--ltl+),
+        CTL/CTL* (+--ctl+), and mu-calculus (+--mu+) expressions.
+
+*--matrix*::
+        Print the dependency matrix and exit.
+
+*-c*, *--cache*::
+    Enable caching of greybox calls.
++
+If this option is used, the state space generator makes calls to the
+short version of the greybox next-state function and memoizes the
+results. If the next-state function is expensive this will yield
+substantial speedups.
+
+*--pins-guards*::
+    Use guards in combination with the long next-state function to speed up the next-state function.
+
+*-r*, *--regroup*='SPEC'::
+    Enable regrouping optimizations on the dependency matrix.
++
+'SPEC' is a comma-separated sequence of transformations
+'<(_T_,)+>' which are applied in this order to the
+dependency matrix.  The following transformations _T_ are available:
+
+include::regroup-options.txt[]
+
+
+*--mucalc*='FILE'|'FORMULA'::
+    Compute a parity game for the mu-calculus formula.
++
+The mu-calculus formula is provided in the file 'FILE' or directly
+as a string 'FORMULA'. The syntax and tool support are described in 
+manpage:ltsmin-mucalc[5].
+
+ifdef::ltl[]
+*--ltl*='LTLFILE|LTLFORMULA'::
+    Compute cross-product of a Buchi automaton and the specification
++
+'LTLFILE' is a file containing an Linear Temporal Logic formula (see
+manpage:ltsmin-ltl[5]).  Which content can also be provided directly as
+'LTLFORMULA'.  This formula will be converted to a Buchi
+automaton.  Then the synchronous cross product with the original
+specification is computed on-the-fly.  A state label is added to
+encode accepting states.
+
+*--ltl-semantics*='spin|textbook|ltsmin'::
+    Change the semantics of the crossproduct generated using '--ltl'
++
+Three options are available, the default is 'spin'.
+
+spin;;
+    Use semantics equal to the spin model checker. From the 'source'
+    state all transitions are generated. Then, state predicates
+    are evaluated on the 'source' state. The Buchi automaton now
+    moves according to these predicates.
+    Deadlocks in the LTS cause the Buchi to progress independently. 
+
+textbook;;
+    Use textbook semantics. A new initial state is generated with an
+    outgoing transition to the initial state. Now, predicates
+    are evaluated on the 'target' state and the Buchi automaton
+    moves according to these predicates.
+    Deadlocks in the LTS do NOT cause the Buchi to progress independently.
+
+ltsmin;;
+    Same as spin semantics, but now deadlocks in the LTS do NOT cause the Buchi
+    to progress independently.
+endif::ltl[]
+
+*--por*::
+    Activate partial order reduction
++
+Partial Order Reduction can reduce the state space when searching
+for deadlocks (+-d+) or accepting cycles (+--ltl+).

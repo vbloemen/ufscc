@@ -1,0 +1,53 @@
+//                           -*- mode: doc; outline-regexp: "==\(=*\) ." -*-
+ltsmin-reduce(1)
+================
+:Author:  Stefan Blom
+:Email:   <sccblom@ewi.utwente.nl>
+:Date:    2011-06-02
+
+== NAME
+
+ltsmin-reduce - sequential reduction of labelled transition systems modulo bisimulation
+
+== SYNOPSIS
+
+ltsmin-reduce [OPTIONS] <input> [<output>]
+
+== OPTIONS
+
+*-s*, *--strong*::
+Minimize modulo strong bisimulation using the default implementation.
+
+*-b*, *--branching*::
+Minimize modulo branching bisimulation using the default implementation.
+
+*--divergence*::
+When used in combination with branching bisimulation, the result is
+divergence preserving branching bisimulation.
+
+*-c*, *--copy*::
+Perform a load/store copy.
+
+*-l*, *--lump*::
+Minimize modulo CTMC lumping.
+
+*--silent*::
+Minimize modulo silent step bisimulation.
+This bisimulation is a generalization of tau * a bisimulation to arbitrary LTSs.
+
+*--cycle*::
+Minimize the lts modulo strongly connected components of silent steps.
+
+*--determinize*::
+Compute a deterministic version of the given LTS.
+
+*--segments='N'*::
+Use 'N' segments in the output file.
+
+include::inc/lts-io-options.txt[]
+
+include::inc/hre-options.txt[]
+
+== SEE ALSO
+
+manpage:ltsmin-compare[1], manpage:ltsmin-reduce-dist[1]

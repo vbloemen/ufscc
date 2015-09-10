@@ -1,0 +1,48 @@
+//                           -*- mode: doc; outline-regexp: "==\(=*\) ." -*-
+etf-convert(1)
+==============
+:Author:  Stefan Blom
+:Email:   <sccblom@cs.utwente.nl>
+:Date:    2008-12-03
+
+
+== NAME
+
+etf-convert - Translate ETF to DVE.
+
+== SYNOPSIS
+
+{manname} [OPTIONS] <input> <output>
+
+== DESCRIPTION
+
+This tool translates manpage:etf[5] to http://divine.fi.muni.cz/[DVE].
+Note that the translation is a very simple one, that produces relatively
+inefficient DVE code.
+
+== OPTIONS
+
+*--pvars=STRING*::
+    Give a list of independent variables that is used while generating
+    multiple process DVE models.
+
+*--byte*::
+    Write the DVE output using the type byte rather than the type int.
+
+*--ce*::
+    When writing ETF, this option eliminates constant state vector elements.
+    Note that the values of the eliminated variables are lost because
+    ETF has no way of defining constants.
+
+include::inc/general-options.txt[]
+
+== EXIT STATUS
+0::
+        Successful termination.
+255::
+        Some error occurred.
+
+== SEE ALSO
+manpage:ltsmin[7], 
+http://divine.fi.muni.cz/[DiVinE].
+

@@ -1,0 +1,34 @@
+//                           -*- mode: doc; outline-regexp: "==\(=*\) ." -*-
+opaal2lts-mc(1)
+===============
+:Author:  Alfons Laarman
+:Email:   <a.w.laarman@ewi.utwente.nl>
+:Date:    2012-05-23
+
+== NAME
+
+opaal2lts-mc - Concurrent state space generator for UPPAAL timed automata
+[uppaal] models via the successor generator opaal [opaal].
+
+== SYNOPSIS
+
+*{manname}* [OPTION]... 'input'<_.so|_.xml>
+
+== DESCRIPTION
+
+{manname} performs multi-core reachability on the labelled transition system
+from a compiled specification provided in 'input.xml' or 'intput.so' (precompiled).
+
+https://code.launchpad.net/~opaal-developers/opaal/
+opaal-ltsmin-succgen[opaal] is an open source implementation of the
+UPPAAL model checker. It was extended to generate successor generators for
+the LTSmin PINS interface. Therefore the PINS interface was extended to
+support the semi-symbolic states in timed automata.
+For more details on the multi-core timed-automata implementation, refer
+to http://eprints.eemcs.utwente.nl/21972/[Multi-Core Reachability for Timed Automata]
+
+== OPTIONS
+
+include::inc/pins2lts-mc-ta-options.txt[]
+
+include::inc/pins2lts-mc.txt[]

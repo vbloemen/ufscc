@@ -1,0 +1,27 @@
+*-n*, *--no-exit*::
+      Do not exit when an error is found. Just count errors. Error counts are
+      printed with +-v+.
+
+
+*-d*, *--deadlock*::
+      Find state with no outgoing transitions. Returns with exit code 1 if
+      a deadlock is found, 0 or 255 (error) otherwise.
+
+
+*-i*, *--invariant*='PREDFILE|PREDEXPRESSION'::
+      Find state where the invariant is violated. The file 'PREDFILE'
+      contains an expression in a simple predicate language (see
+      manpage:ltsmin-pred[5]). Its contents can also be entered directly as
+      a 'PREDEXPRESSION'. Returns with exit code 1 if
+      a violation is found, 0 or 255 (error) otherwise.
+
+
+*-a*, *--action*='STRING'::
+      Find state with an outgoing transition of type 'STRING'. Returns with exit
+      code 1 if the action is found, 0 or 255 (error) otherwise.
+
+
+*--trace*='FILE'_.gcf_::
+      When finding a deadlock state or a transition labelled with a certain
+      action, write a trace to 'FILE'_.gcf_, beginning from the initial state.
+      Traces can be pretty-printed with manpage:ltsmin-printtrace[1].
