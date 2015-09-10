@@ -1,0 +1,30 @@
+
+int i[TOTAL]; // invariant: TOTAL == L+T+I
+
+active[L] proctype Loop() {
+end:do
+    :: atomic { i[_pid] < N-1 -> i[_pid]++ }
+    :: atomic { else; i[_pid] = 0; }
+    od
+    // never reached:
+}
+
+active[T] proctype Tree() {
+    if
+    :: i[_pid] = 2;
+    :: i[_pid] = 3;
+    fi;
+end: do
+    :: atomic{  i[_pid] << 1      < M+1 -> i[_pid] =  i[_pid] << 1; }
+    :: atomic{ (i[_pid] << 1) + 1 < M+1 -> i[_pid] = (i[_pid] << 1) + 1; }
+    od
+    // never reached:
+}
+
+active[I] proctype Line() {
+end:do
+    :: atomic{ i[_pid] < K-1 -> i[_pid]++; }
+    od
+    // never reached:
+}
+
